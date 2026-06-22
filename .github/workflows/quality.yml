@@ -1,0 +1,38 @@
+name: Code Quality
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Every Monday at 06:00 UTC
+  workflow_dispatch:
+
+jobs:
+  quality:
+    name: Quality Report
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+
+      - name: Type safety check
+        run: npm run typecheck
+
+      - name: Linting analysis
+        run: npm run lint
+
+      - name: Build verification
+        run: npm run build
+
+      - name: Coverage report
+        run: npm run coverage -- --reporter=json --reporter=text
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: quality-report-${{ github.run_number }}
+          path: |
+            coverage/
+            dist/
+          retention-days: 30

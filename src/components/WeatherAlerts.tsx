@@ -1,6 +1,7 @@
+import { memo } from 'react'
 import type { WeatherAlert } from '../types/weather.ts'
 
-export const WeatherAlerts = ({ alerts }: { alerts: WeatherAlert[] }) => (
+export const WeatherAlerts = memo(({ alerts }: { alerts: WeatherAlert[] }) => (
   <section aria-labelledby="weather-alerts-title" className="rounded-3xl border border-amber-200/60 bg-white/90 p-6 shadow-panel dark:border-amber-400/30 dark:bg-slate-900/75">
     <div className="flex items-center gap-3">
       <span className="text-2xl" aria-hidden="true">⚠️</span>
@@ -39,4 +40,4 @@ export const WeatherAlerts = ({ alerts }: { alerts: WeatherAlert[] }) => (
       </ul>
     )}
   </section>
-)
+))
