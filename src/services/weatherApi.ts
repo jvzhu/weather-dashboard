@@ -137,12 +137,6 @@ export const searchLocations = async (query: string): Promise<LocationSuggestion
 }
 
 export const reverseGeocode = async (latitude: number, longitude: number): Promise<LocationSuggestion | null> => {
-  const cacheKey = `reverse:${latitude.toFixed(3)}:${longitude.toFixed(3)}`
-  const cached = readCache<LocationSuggestion>(cacheKey)
-  if (cached) {
-    return cached
-  }
-
   const params = new URLSearchParams({
     latitude: latitude.toString(),
     longitude: longitude.toString(),
@@ -152,13 +146,7 @@ export const reverseGeocode = async (latitude: number, longitude: number): Promi
   })
 
   const response = await fetchJson<OpenMeteoGeocodingResponse>(`${GEOCODING_API}/reverse?${params.toString()}`)
-  const location = response.results?.[0] ? toLocationSuggestion(response.results[0]) : null
-
-  if (location) {
-    writeCache(cacheKey, location, DAY)
-  }
-
-  return location
+  return response.results?.[0] ? toLocationSuggestion(response.results[0]) : null
 }
 
 const fetchAlerts = async (latitude: number, longitude: number): Promise<WeatherAlert[]> => {
@@ -177,11 +165,17 @@ const fetchAlerts = async (latitude: number, longitude: number): Promise<Weather
   }
 }
 
-export const fetchWeather = async (location: LocationSuggestion): Promise<WeatherData> => {
+export const fetchWeather = async (
+  location: LocationSuggestion,
+  options: { persistToStorage?: boolean } = {},
+): Promise<WeatherData> => {
+  const shouldPersist = options.persistToStorage ?? true
   const cacheKey = `forecast:${location.latitude.toFixed(3)}:${location.longitude.toFixed(3)}`
-  const cached = readCache<WeatherData>(cacheKey)
-  if (cached) {
-    return cached
+  if (shouldPersist) {
+    const cached = readCache<WeatherData>(cacheKey)
+    if (cached) {
+      return cached
+    }
   }
 
   const params = new URLSearchParams({
@@ -234,6 +228,9 @@ export const fetchWeather = async (location: LocationSuggestion): Promise<Weathe
     updatedAt: forecastResponse.current.time,
   }
 
-  writeCache(cacheKey, weather, TEN_MINUTES)
+  if (shouldPersist) {
+    writeCache(cacheKey, weather, TEN_MINUTES)
+  }
+
   return weather
 }

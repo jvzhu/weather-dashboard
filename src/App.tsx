@@ -53,12 +53,12 @@ function App() {
     window.localStorage.setItem(UNIT_STORAGE_KEY, unit)
   }, [unit])
 
-  const loadForecast = useCallback(async (location: LocationSuggestion) => {
+  const loadForecast = useCallback(async (location: LocationSuggestion, persistToStorage = true) => {
     setIsLoading(true)
     setError(null)
 
     try {
-      const response = await fetchWeather(location)
+      const response = await fetchWeather(location, { persistToStorage })
       setCurrentLocation(location)
       setWeather(response)
     } catch {
@@ -87,7 +87,7 @@ function App() {
             longitude: coords.longitude,
           }
           setStatusMessage('Showing weather near your current location.')
-          await loadForecast(location)
+          await loadForecast(location, false)
         } catch {
           setStatusMessage('Unable to resolve your location name, showing local forecast by coordinates.')
           await loadForecast({
@@ -96,7 +96,7 @@ function App() {
             name: 'Current location',
             latitude: coords.latitude,
             longitude: coords.longitude,
-          })
+          }, false)
         }
       },
       async () => {
@@ -111,7 +111,6 @@ function App() {
     if (hasInitialized.current) {
       return
     }
-    hasInitialized.current = true
     hasInitialized.current = true
 
     if (!geolocationSupported) {
