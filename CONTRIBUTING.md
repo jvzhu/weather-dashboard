@@ -9,7 +9,7 @@ Thank you for your interest in contributing to the weather dashboard!
 **Prerequisites:** Node.js 20+ and npm 10+.
 
 ```bash
-git clone https://github.com/jvzhu/weather-dashboard.git
+git clone https://github.com/<username>/weather-dashboard.git
 cd weather-dashboard
 npm install
 npm run dev        # Start the dev server at http://localhost:5173

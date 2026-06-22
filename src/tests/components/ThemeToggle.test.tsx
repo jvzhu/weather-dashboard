@@ -70,4 +70,3 @@ describe('ThemeToggle', () => {
     expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Switch to light theme')
   })
 })
-
