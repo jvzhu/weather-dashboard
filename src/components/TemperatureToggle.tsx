@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import type { TemperatureUnit } from '../types/weather.ts'
 
 interface TemperatureToggleProps {
@@ -5,7 +6,7 @@ interface TemperatureToggleProps {
   onChange: (unit: TemperatureUnit) => void
 }
 
-export const TemperatureToggle = ({ unit, onChange }: TemperatureToggleProps) => (
+export const TemperatureToggle = memo(({ unit, onChange }: TemperatureToggleProps) => (
   <div className="inline-flex rounded-full border border-slate-200 bg-slate-100 p-1 dark:border-white/10 dark:bg-slate-900" role="group" aria-label="Temperature unit toggle">
     {([
       ['celsius', '°C'],
@@ -30,4 +31,4 @@ export const TemperatureToggle = ({ unit, onChange }: TemperatureToggleProps) =>
       )
     })}
   </div>
-)
+))

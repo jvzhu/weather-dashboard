@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import type { CurrentWeatherData, LocationSuggestion, TemperatureUnit } from '../types/weather.ts'
 import { getWeatherPresentation } from '../utils/weatherIcons.ts'
 
@@ -13,7 +14,7 @@ const formatTemperature = (value: number, unit: TemperatureUnit) =>
 
 const metricFormatter = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 })
 
-export const CurrentWeather = ({ location, current, unit, updatedAt }: CurrentWeatherProps) => {
+export const CurrentWeather = memo(({ location, current, unit, updatedAt }: CurrentWeatherProps) => {
   const presentation = getWeatherPresentation(current.weatherCode, current.isDay === 1)
 
   const metrics = [
@@ -68,4 +69,4 @@ export const CurrentWeather = ({ location, current, unit, updatedAt }: CurrentWe
       </dl>
     </section>
   )
-}
+})

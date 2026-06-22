@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import type { DailyForecastItem, TemperatureUnit } from '../types/weather.ts'
 import { getWeatherPresentation } from '../utils/weatherIcons.ts'
 
@@ -9,7 +10,7 @@ interface DailyForecastProps {
   unit: TemperatureUnit
 }
 
-export const DailyForecast = ({ items, unit }: DailyForecastProps) => (
+export const DailyForecast = memo(({ items, unit }: DailyForecastProps) => (
   <section aria-labelledby="daily-forecast-title" className="rounded-3xl border border-white/30 bg-white/85 p-6 shadow-panel dark:border-white/10 dark:bg-slate-900/70">
     <div className="flex items-end justify-between gap-4">
       <div>
@@ -42,4 +43,4 @@ export const DailyForecast = ({ items, unit }: DailyForecastProps) => (
       })}
     </div>
   </section>
-)
+))
